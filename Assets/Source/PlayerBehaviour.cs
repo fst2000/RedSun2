@@ -11,6 +11,7 @@ public class PlayerBehaviour : MonoBehaviour
     new Rigidbody rigidbody;
     Animator animator;
 
+    IRotation rigidbodyRotation;
     IVector2 moveInput;
     IVector3 moveVector;
     IFloat walkSpeedInput;
@@ -18,6 +19,7 @@ public class PlayerBehaviour : MonoBehaviour
     
     AnimatorFloatConsumer animatorRunBlendConsumer;
     RigidbodyVelocityConsumer rigidbodyVelocityConsumer;
+    IRotationConsumer transformRotationConsumer;
     void Start()
     {
         rigidbody = gameObject.AddComponent<Rigidbody>();
@@ -28,6 +30,14 @@ public class PlayerBehaviour : MonoBehaviour
         
         animator = gameObject.GetComponent<Animator>();
 
+        rigidbodyRotation = new DelegateRotation(c =>
+        {
+            Vector3 direction = rigidbody.velocity;
+            direction.y = 0;
+            if(direction.magnitude > 0.1)
+                c.Consume(Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 5));
+        }
+        );
         moveInput = new DelegateVector2(
             v2Consumer => v2Consumer.Consume(
                     new Vector2(
@@ -40,16 +50,18 @@ public class PlayerBehaviour : MonoBehaviour
         );
         moveVector = new WalkVector3(
             walkSpeedInput,
-            new TransformDirectionVector3(
-                transform,
-                new DelegateVector3(v3Consumer =>
-                    moveInput.GiveVector2(
-                        new DelegateVector2Consumer(v2 =>
-                        v3Consumer.Consume(new Vector3(v2.x, 0, v2.y))
+            new ClampedVector3(1,
+                new TransformDirectionVector3(
+                    Camera.main.transform,
+                    new DelegateVector3(v3Consumer =>
+                        moveInput.GiveVector2(
+                            new DelegateVector2Consumer(v2 =>
+                            v3Consumer.Consume(new Vector3(v2.x, 0, v2.y))
+                            )
                         )
                     )
-                )
-            )    
+                )    
+            )
         );
         animatorRunBlend = new DelegateFloat(fConsumer =>
         {
@@ -57,14 +69,22 @@ public class PlayerBehaviour : MonoBehaviour
         });
 
         animatorRunBlendConsumer = new AnimatorFloatConsumer(animator, "runBlend");
+        transformRotationConsumer = new DelegateRotationConsumer(q =>
+            transform.rotation = q
+        );
     }
     void Update()
     {
         moveVector.GiveVector3(rigidbodyVelocityConsumer);
         animatorRunBlend.GiveFloat(animatorRunBlendConsumer);
+        rigidbodyRotation.GiveRotation(transformRotationConsumer);
     }
     void FixedUpdate()
     {
         fixedUpdate.Call();
+    }
+    void LateUpdate()
+    {
+
     }
 }

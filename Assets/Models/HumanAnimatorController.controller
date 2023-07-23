@@ -31,7 +31,7 @@ AnimatorController:
   m_Name: HumanAnimatorController
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Blend
+  - m_Name: runBlend
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -70,11 +70,11 @@ BlendTree:
     m_Motion: {fileID: -7551964380084998518, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 1.5
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
-  m_BlendParameter: Blend
+  m_BlendParameter: runBlend
   m_BlendParameterY: Blend
   m_MinThreshold: 0
   m_MaxThreshold: 1

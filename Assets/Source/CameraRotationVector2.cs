@@ -11,6 +11,8 @@ public class CameraRotationVector2 : IVector2
     {
         input.GiveVector2(new DelegateVector2Consumer(v2 =>
         {
+            if(rotation.y >= 60) rotation.y = 60;
+            if(rotation.y <= -60) rotation.y = -60;
             rotation += v2;
         }));
         Vector2 clampedRotation = new Vector2(rotation.x, Mathf.Clamp(rotation.y,-60,60));
