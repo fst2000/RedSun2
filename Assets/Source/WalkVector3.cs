@@ -14,7 +14,8 @@ public class WalkVector3 : IVector3
         {
             walkSpeed.GiveFloat(new DelegateFloatConsumer(f =>
             {
-                consumer.Consume(new Vector3(v.x, 0, v.z) * f);
+                float length = v.magnitude;
+                consumer.Consume(new Vector3(v.x, 0, v.z).normalized * length * f);
             }));
         }));
     }

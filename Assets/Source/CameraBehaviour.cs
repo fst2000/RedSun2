@@ -52,8 +52,8 @@ public class CameraBehaviour : MonoBehaviour
     }
     void Update()
     {
-        cameraRotation.GiveRotation(cameraRotationConsumer);
         cameraPosition.GiveVector3(cameraPositionConsumer);
+        cameraRotation.GiveRotation(cameraRotationConsumer);
     }
     void LateUpdate()
     {
