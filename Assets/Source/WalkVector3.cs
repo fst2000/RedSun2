@@ -1,9 +1,9 @@
 using UnityEngine;
 public class WalkVector3 : IVector3
 {
-    IFloat walkSpeed;
+    float walkSpeed;
     IVector3 vector;
-    public WalkVector3(IFloat walkSpeed, IVector3 vector)
+    public WalkVector3(float walkSpeed, IVector3 vector)
     {
         this.walkSpeed = walkSpeed;
         this.vector = vector;
@@ -12,11 +12,8 @@ public class WalkVector3 : IVector3
     {
         vector.GiveVector3(new DelegateVector3Consumer(v =>
         {
-            walkSpeed.GiveFloat(new DelegateFloatConsumer(f =>
-            {
-                float length = v.magnitude;
-                consumer.Consume(new Vector3(v.x, 0, v.z).normalized * length * f);
-            }));
+            float length = v.magnitude;
+            consumer.Consume(new Vector3(v.x, 0, v.z).normalized * length * walkSpeed);
         }));
     }
 }

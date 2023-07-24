@@ -11,9 +11,14 @@ public class PlayerBehaviour : MonoBehaviour
 
     new Rigidbody rigidbody;
     Animator animator;
+    new Transform camera;
 
     IHumanState currentState;
-    
+    IRotation moveRotation;
+    IVector2 moveInputVector2;
+    IVector3 runVector3;
+    IFloat runFloat;
+    IRotationConsumer transformRotationConsumer;
     void Start()
     {
         rigidbody = gameObject.AddComponent<Rigidbody>();
@@ -23,7 +28,56 @@ public class PlayerBehaviour : MonoBehaviour
         
         animator = gameObject.GetComponent<Animator>();
 
-        currentState = new HumanRunState(rigidbody,animator, update,fixedUpdate);
+        camera = Camera.main.transform;
+
+        moveInputVector2 = new DelegateVector2(v2Consumer =>
+            v2Consumer.Consume(
+                    new Vector2(
+                        Input.GetAxis("Horizontal"),
+                        Input.GetAxis("Vertical"))
+            )
+        );
+        runVector3 = new WalkVector3(5, new ClampedVector3(1, 
+            new DelegateVector3(consumer =>
+            {
+                moveInputVector2.GiveVector2(new DelegateVector2Consumer(v2 =>
+                {
+                    consumer.Consume(camera.TransformDirection(new Vector3(v2.x,0,v2.y)));
+                }));
+            }
+        )
+        ));
+        runFloat = new DelegateFloat(consumer =>
+        {
+            moveInputVector2.GiveVector2(new DelegateVector2Consumer(v2 =>
+            {
+                consumer.Consume(v2.magnitude);
+            }));
+        });
+        moveRotation = new DelegateRotation(consumer =>
+        {
+            runVector3.GiveVector3(new DelegateVector3Consumer(v3=>
+            {
+                if(v3.magnitude > 0.01f)
+                {
+                    consumer.Consume(Quaternion.Lerp(
+                        transform.rotation,
+                        Quaternion.LookRotation(v3, Vector3.up), Time.deltaTime * 5));
+                }
+            }));
+        });
+        transformRotationConsumer = new DelegateRotationConsumer(q =>
+        {
+            transform.rotation = q;
+        });
+
+        currentState = new HumanRunState(
+            moveRotation,
+            runVector3,
+            new RigidbodyVelocityConsumer(fixedUpdate,rigidbody),
+            transformRotationConsumer,
+            new FloatBlendAnimator(animator, runFloat, "runBlend", update),
+            update, fixedUpdate);
     }
     void Update()
     {

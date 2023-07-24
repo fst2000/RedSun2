@@ -1,8 +1,8 @@
-public class DelegareBoolConsumer : IBoolConsumer
+public class DelegateBoolConsumer : IBoolConsumer
 {
     BoolConsumerDelegate consumerDelegate;
 
-    public DelegareBoolConsumer(BoolConsumerDelegate consumerDelegate)
+    public DelegateBoolConsumer(BoolConsumerDelegate consumerDelegate)
     {
         this.consumerDelegate = consumerDelegate;
     }
