@@ -568,7 +568,6 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
-  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -642,29 +641,9 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &963194229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963194225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09ab0aa79322ba04d9d690f6b3a1d480, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  origin: {fileID: 1286312567}
-  offset: {x: 0, y: 1.5, z: -3}
-  rotationSpeed: 5
 --- !u!1 &1286312565 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
-  m_PrefabInstance: {fileID: 2102029339}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1286312567 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
   m_PrefabInstance: {fileID: 2102029339}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1286312568
@@ -679,7 +658,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c182fa9ee1b2314b8a7da909374b3be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
+  animator: {fileID: 1286312570}
+  runSpeed: 5
+  walkSpeed: 3
+  crouchSpeed: 3
 --- !u!136 &1286312569
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -694,6 +676,11 @@ CapsuleCollider:
   m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0.9, z: 0}
+--- !u!95 &1286312570 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+  m_PrefabInstance: {fileID: 2102029339}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2102029339
 PrefabInstance:
   m_ObjectHideFlags: 0

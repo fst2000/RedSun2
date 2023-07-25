@@ -1,36 +1,31 @@
-using UnityEngine;
+using System;
 public class HumanRunState : IHumanState
 {
-    IRotation rotation;
-    IVector3 runVector3;
-    IVector3Consumer moveConsumer;
-    IRotationConsumer rotationConsumer;
-    IFloatConsumer animatorFloatConsumer;
+    Action updateAction;
+    BoolFunc isAiming;
 
-    public HumanRunState(
-        HumanStateDelegate walkArmedState,
-        IRotation rotation,
-        IVector3 runVector3,
-        IVector3Consumer moveConsumer,
-        IRotationConsumer rotationConsumer,
-        IAnimator animator,
-        IEvent update)
+    public HumanRunState(Action updateAction, IEvent updateEvent, BoolFunc isAiming, IAnimator animator, HumanState walkAimState)
     {
-        this.runVector3 = runVector3;
-        this.moveConsumer = moveConsumer;
-        this.rotationConsumer = rotationConsumer;
-        animator.StartAnimation("Run");
-        this.rotation = rotation;
-        update.Subscribe(Update);
+        animator.StartAnimation("RunBlend");
+        updateEvent.Subscribe(Update);
+        this.updateAction = updateAction;
+        this.isAiming = isAiming;
+        this.walkAimState = walkAimState;
     }
 
-    void Update()
-    {
-        runVector3.GiveVector3(moveConsumer);
-        rotation.GiveRotation(rotationConsumer);
-    }
+    HumanState walkAimState;
     public IHumanState NextState()
     {
-        return this;
+        bool isAimingBool = false;
+        isAiming(b =>
+        {
+            isAimingBool = b;
+        });
+        if(isAimingBool) return walkAimState();
+        else return this;
+    }
+    void Update()
+    {
+        updateAction();
     }
 }

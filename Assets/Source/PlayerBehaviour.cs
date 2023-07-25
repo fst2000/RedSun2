@@ -1,116 +1,65 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerBehaviour : MonoBehaviour
 {
+    [SerializeField] Animator animator;
+    [SerializeField] float runSpeed;
     [SerializeField] float walkSpeed;
-
-    IEvent update = new Event();
-    IEvent fixedUpdate = new Event();
-
+    [SerializeField] float crouchSpeed;
+    IEvent update;
+    Transform camera;
     new Rigidbody rigidbody;
-    Animator animator;
-    new Transform camera;
-
     IHumanState currentState;
-    HumanStateDelegate runState;
-    HumanStateDelegate walkArmedState;
-    IRotation moveRotation;
-    IRotation aimRotation;
-    IRotation moveArmedRotation;
-    IVector2 moveInputVector2;
-    IVector3 runVector3;
-    IFloat runFloat;
-    IRotationConsumer transformRotationConsumer;
+    HumanState runState;
+    HumanState walkAimState;
+    IAnimator humanAnimator;
+    KeyboardMoveInput moveInput;
+    RotationFunc runRotationFunc;
+    Vector3Func runVector3Func;
+    FloatFunc runAnimatorFunc;
+    BoolFunc isAimingFunc;
+    Action runStateUpdateAction;
     void Start()
     {
-        rigidbody = gameObject.AddComponent<Rigidbody>();
-        rigidbody.freezeRotation = true;
-        rigidbody.mass = 60;
-        rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
-        
-        animator = gameObject.GetComponent<Animator>();
-
+        update = new Event();
         camera = Camera.main.transform;
 
-        moveInputVector2 = new DelegateVector2(v2Consumer =>
-            v2Consumer.Consume(
-                    new Vector2(
-                        Input.GetAxis("Horizontal"),
-                        Input.GetAxis("Vertical"))
-            )
-        );
-        runVector3 = new WalkVector3(5, new ClampedVector3(1, 
-            new DelegateVector3(consumer =>
-            {
-                moveInputVector2.GiveVector2(new DelegateVector2Consumer(v2 =>
-                {
-                    consumer.Consume(camera.TransformDirection(new Vector3(v2.x,0,v2.y)));
-                }));
-            }
-        )
-        ));
-        runFloat = new DelegateFloat(consumer =>
-        {
-            moveInputVector2.GiveVector2(new DelegateVector2Consumer(v2 =>
-            {
-                consumer.Consume(v2.magnitude);
-            }));
-        });
-        moveRotation = new DelegateRotation(consumer =>
-        {
-            runVector3.GiveVector3(new DelegateVector3Consumer(v3=>
-            {
-                if(v3.magnitude > 0.01f)
-                {
-                    consumer.Consume(Quaternion.Lerp(
-                        transform.rotation,
-                        Quaternion.LookRotation(v3, Vector3.up), Time.deltaTime * 5));
-                }
-            }));
-        });
-        aimRotation = new DelegateRotation(consumer =>
-        {
-            consumer.Consume(Quaternion.LookRotation(camera.transform.forward));
-        });
-        moveArmedRotation = new DelegateRotation(consumer =>
-        {
-            Vector3 moveDir = camera.transform.forward;
-            moveDir.y = 0;
-            consumer.Consume(Quaternion.LookRotation(moveDir));
-        });
-        transformRotationConsumer = new DelegateRotationConsumer(q =>
-        {
-            transform.rotation = q;
-        });
+        rigidbody = gameObject.AddComponent<Rigidbody>();
+        rigidbody.mass = 60;
+        rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        rigidbody.freezeRotation = true;
 
-        runState = () => new HumanRunState(
-            walkArmedState,
-            moveRotation,
-            runVector3,
-            new RigidbodyVelocityConsumer(fixedUpdate,rigidbody),
-            transformRotationConsumer,
-            new FloatBlendAnimator(animator, runFloat, "runBlend", update),
-            update, fixedUpdate);
-        walkArmedState = () => new HumanWalkArmedState();
+        humanAnimator = new UnityAnimator(animator);
+        moveInput = new KeyboardMoveInput();
+        runRotationFunc = qAction => runVector3Func(v3 => qAction(Quaternion.LookRotation(v3)));
+        runVector3Func = v3Action =>
+        {
+            moveInput.Accept(v2 =>
+            {
+                Vector3 inputV3 = camera.TransformDirection(new Vector3(v2.x, 0, v2.y));
+                inputV3 = new Vector3(inputV3.x,0,inputV3.z).normalized * inputV3.magnitude;
+                v3Action(inputV3);
+            });
+        };
+        runAnimatorFunc = fAction => fAction(rigidbody.velocity.magnitude);
+        isAimingFunc = bAction => bAction(Input.GetMouseButton(1));
+        runStateUpdateAction = () =>
+        {
+            runRotationFunc(q => transform.rotation = q);
+            runVector3Func(v3 => rigidbody.velocity = v3 * runSpeed);
+            runAnimatorFunc(f => animator.SetFloat("runBlend", f));
+        };
+
+        runState = () => new HumanRunState(runStateUpdateAction, update, isAimingFunc, humanAnimator, walkAimState);
         currentState = runState();
     }
     void Update()
     {
-        if(currentState != currentState.NextState())
-        {
-            currentState = currentState.NextState();
-        }
+        if(currentState.NextState() != currentState) currentState = currentState.NextState();
         update.Call();
     }
-    void FixedUpdate()
-    {
-        fixedUpdate.Call();
-    }
-    void LateUpdate()
-    {
-
-    }
 }
-public delegate IHumanState HumanStateDelegate();
+public delegate IHumanState HumanState();

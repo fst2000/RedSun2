@@ -1,4 +1,5 @@
 public interface IAnimator
 {
-    void StartAnimation(string name);
+    IAnimation StartAnimation(string name);
+    IParameter ParameterFloat(string name);
 }

@@ -1,4 +1,7 @@
+using System;
+using UnityEngine;
 public interface IRotation
 {
-    void GiveRotation(IRotationConsumer consumer);
+    void Accept(Action<Quaternion> action);
 }
+public delegate void RotationFunc(Action<Quaternion> action);

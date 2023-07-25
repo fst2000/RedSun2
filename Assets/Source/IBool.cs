@@ -1,4 +1,6 @@
+using System;
 public interface IBool
 {
-    void GiveInput(IBoolConsumer consumer);
+    void Accept(Action<bool> action);
 }
+public delegate void BoolFunc(Action<bool> action);

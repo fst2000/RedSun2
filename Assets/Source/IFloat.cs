@@ -1,4 +1,6 @@
+using System;
 public interface IFloat
 {
-    void GiveFloat(IFloatConsumer consumer);
+    void Accept(Action<float> action);
 }
+public delegate void FloatFunc(Action<float> action);
