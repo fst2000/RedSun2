@@ -8,13 +8,13 @@ public class HumanRunState : IHumanState
     IFloatConsumer animatorFloatConsumer;
 
     public HumanRunState(
+        HumanStateDelegate walkArmedState,
         IRotation rotation,
         IVector3 runVector3,
         IVector3Consumer moveConsumer,
         IRotationConsumer rotationConsumer,
         IAnimator animator,
-        IEvent update,
-        IEvent fixedUpdate)
+        IEvent update)
     {
         this.runVector3 = runVector3;
         this.moveConsumer = moveConsumer;
@@ -22,17 +22,12 @@ public class HumanRunState : IHumanState
         animator.StartAnimation("Run");
         this.rotation = rotation;
         update.Subscribe(Update);
-        fixedUpdate.Subscribe(FixedUpdate);
     }
 
     void Update()
     {
         runVector3.GiveVector3(moveConsumer);
         rotation.GiveRotation(rotationConsumer);
-    }
-    void FixedUpdate()
-    {
-
     }
     public IHumanState NextState()
     {

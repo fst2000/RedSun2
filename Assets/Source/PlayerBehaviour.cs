@@ -14,7 +14,11 @@ public class PlayerBehaviour : MonoBehaviour
     new Transform camera;
 
     IHumanState currentState;
+    HumanStateDelegate runState;
+    HumanStateDelegate walkArmedState;
     IRotation moveRotation;
+    IRotation aimRotation;
+    IRotation moveArmedRotation;
     IVector2 moveInputVector2;
     IVector3 runVector3;
     IFloat runFloat;
@@ -66,18 +70,31 @@ public class PlayerBehaviour : MonoBehaviour
                 }
             }));
         });
+        aimRotation = new DelegateRotation(consumer =>
+        {
+            consumer.Consume(Quaternion.LookRotation(camera.transform.forward));
+        });
+        moveArmedRotation = new DelegateRotation(consumer =>
+        {
+            Vector3 moveDir = camera.transform.forward;
+            moveDir.y = 0;
+            consumer.Consume(Quaternion.LookRotation(moveDir));
+        });
         transformRotationConsumer = new DelegateRotationConsumer(q =>
         {
             transform.rotation = q;
         });
 
-        currentState = new HumanRunState(
+        runState = () => new HumanRunState(
+            walkArmedState,
             moveRotation,
             runVector3,
             new RigidbodyVelocityConsumer(fixedUpdate,rigidbody),
             transformRotationConsumer,
             new FloatBlendAnimator(animator, runFloat, "runBlend", update),
             update, fixedUpdate);
+        walkArmedState = () => new HumanWalkArmedState();
+        currentState = runState();
     }
     void Update()
     {
