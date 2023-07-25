@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.8517139, g: 0.89980996, b: 0.9543064, a: 1}
+  m_IndirectSpecularColor: {r: 0.85170966, g: 0.899806, b: 0.9543049, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -676,10 +676,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1286312565}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c182fa9ee1b2314b8a7da909374b3be, type: 3}
+  m_Script: {fileID: 11500000, guid: c90463d5b9b57e94081e9dd0be7e34b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
+  animator: {fileID: 2102029340}
 --- !u!136 &1286312569
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -764,6 +764,11 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 3861a32aaa7c13a4a9676441cfe26f71, type: 2}
+      objectReference: {fileID: 9100000, guid: 6e5d1382b96c98f45ac78586db369fa3, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+--- !u!95 &2102029340 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+  m_PrefabInstance: {fileID: 2102029339}
+  m_PrefabAsset: {fileID: 0}
