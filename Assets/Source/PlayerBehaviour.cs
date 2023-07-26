@@ -9,22 +9,25 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] float runSpeed;
     [SerializeField] float walkSpeed;
     [SerializeField] float crouchSpeed;
-    IEvent update;
-    Transform camera;
+    new Transform camera;
     new Rigidbody rigidbody;
     IHumanState currentState;
     HumanState runState;
     HumanState walkAimState;
     IAnimator humanAnimator;
     KeyboardMoveInput moveInput;
-    RotationFunc runRotationFunc;
-    Vector3Func runVector3Func;
+    RotationFunc moveRotationFunc;
+    RotationFunc moveAimRotationFunc;
+    Vector3Func moveVector3Func;
+    Vector2Func walkAimAnimatorFunc;
     FloatFunc runAnimatorFunc;
     BoolFunc isAimingFunc;
+    Action runStartAction;
     Action runStateUpdateAction;
+    Action walkAimStartAction;
+    Action walkAimUpdateAction;
     void Start()
     {
-        update = new Event();
         camera = Camera.main.transform;
 
         rigidbody = gameObject.AddComponent<Rigidbody>();
@@ -34,32 +37,60 @@ public class PlayerBehaviour : MonoBehaviour
 
         humanAnimator = new UnityAnimator(animator);
         moveInput = new KeyboardMoveInput();
-        runRotationFunc = qAction => runVector3Func(v3 => qAction(Quaternion.LookRotation(v3)));
-        runVector3Func = v3Action =>
+        moveRotationFunc = qAction => moveVector3Func(v3 =>
+        {
+            if(v3.magnitude > 0.01f) qAction(Quaternion.LookRotation(v3));
+        });
+        moveAimRotationFunc = qAction => 
+        {
+            Vector3 look = camera.transform.forward;
+            look.y = 0;
+            qAction(Quaternion.LookRotation(look));
+        };
+        moveVector3Func = v3Action =>
         {
             moveInput.Accept(v2 =>
             {
                 Vector3 inputV3 = camera.TransformDirection(new Vector3(v2.x, 0, v2.y));
-                inputV3 = new Vector3(inputV3.x,0,inputV3.z).normalized * inputV3.magnitude;
+                inputV3 = Vector3.ClampMagnitude(new Vector3(inputV3.x,0,inputV3.z).normalized * inputV3.magnitude, 1);
                 v3Action(inputV3);
             });
         };
+        walkAimAnimatorFunc = v2Action =>
+            moveInput.Accept(v2 => v2Action(v2 * rigidbody.velocity.magnitude));
         runAnimatorFunc = fAction => fAction(rigidbody.velocity.magnitude);
         isAimingFunc = bAction => bAction(Input.GetMouseButton(1));
+        runStartAction = () => humanAnimator.StartAnimation("Run").Play();
         runStateUpdateAction = () =>
         {
-            runRotationFunc(q => transform.rotation = q);
-            runVector3Func(v3 => rigidbody.velocity = v3 * runSpeed);
+            moveRotationFunc(q => transform.rotation = q);
+            moveVector3Func(v3 => rigidbody.velocity = v3 * runSpeed);
             runAnimatorFunc(f => animator.SetFloat("runBlend", f));
         };
+        walkAimStartAction = () => humanAnimator.StartAnimation("WalkAim").Play();
+        walkAimUpdateAction = () =>
+        {
+            moveAimRotationFunc(q => transform.rotation = q);
+            moveVector3Func(v3 => rigidbody.velocity = v3 * walkSpeed);
+            walkAimAnimatorFunc(v2 => 
+            {
+                animator.SetFloat("WalkAimX", v2.x);
+                animator.SetFloat("WalkAimY", v2.y);
+            });
+        };
 
-        runState = () => new HumanRunState(runStateUpdateAction, update, isAimingFunc, humanAnimator, walkAimState);
+        runState = () => new HumanRunState(runStartAction, runStateUpdateAction, isAimingFunc, walkAimState);
+        walkAimState = () => new HumanWalkAimState(walkAimStartAction, walkAimUpdateAction, isAimingFunc, runState);
         currentState = runState();
     }
     void Update()
     {
-        if(currentState.NextState() != currentState) currentState = currentState.NextState();
-        update.Call();
+        if(currentState.NextState() != currentState)
+        {
+            currentState = currentState.NextState();
+            currentState.Start();
+        }
+        currentState.Update();
     }
 }
 public delegate IHumanState HumanState();

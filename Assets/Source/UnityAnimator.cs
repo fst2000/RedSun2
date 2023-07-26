@@ -15,6 +15,6 @@ public class UnityAnimator : IAnimator
 
     public IAnimation StartAnimation(string name)
     {
-        throw new System.NotImplementedException();
+        return new UnityAnimation(animator, name);
     }
 }
