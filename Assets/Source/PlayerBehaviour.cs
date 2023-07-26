@@ -6,6 +6,7 @@ using System;
 public class PlayerBehaviour : MonoBehaviour
 {
     [SerializeField] Animator animator;
+    [SerializeField] Transform spine;
     [SerializeField] float runSpeed;
     [SerializeField] float walkSpeed;
     [SerializeField] float crouchSpeed;
@@ -18,6 +19,7 @@ public class PlayerBehaviour : MonoBehaviour
     KeyboardMoveInput moveInput;
     RotationFunc moveRotationFunc;
     RotationFunc moveAimRotationFunc;
+    RotationFunc aimRotationFunc;
     Vector3Func moveVector3Func;
     Vector2Func walkAimAnimatorFunc;
     FloatFunc runAnimatorFunc;
@@ -26,6 +28,7 @@ public class PlayerBehaviour : MonoBehaviour
     Action runStateUpdateAction;
     Action walkAimStartAction;
     Action walkAimUpdateAction;
+    Action spineUpdateAction;
     void Start()
     {
         camera = Camera.main.transform;
@@ -47,6 +50,7 @@ public class PlayerBehaviour : MonoBehaviour
             look.y = 0;
             qAction(Quaternion.LookRotation(look));
         };
+        aimRotationFunc = qAction => qAction(Quaternion.FromToRotation(transform.forward,camera.forward));
         moveVector3Func = v3Action =>
         {
             moveInput.Accept(v2 =>
@@ -78,9 +82,10 @@ public class PlayerBehaviour : MonoBehaviour
                 animator.SetFloat("WalkAimY", v2.y);
             });
         };
+        spineUpdateAction = () => aimRotationFunc(q => spine.rotation = q * spine.rotation);
 
         runState = () => new HumanRunState(runStartAction, runStateUpdateAction, isAimingFunc, walkAimState);
-        walkAimState = () => new HumanWalkAimState(walkAimStartAction, walkAimUpdateAction, isAimingFunc, runState);
+        walkAimState = () => new HumanWalkAimState(walkAimStartAction, walkAimUpdateAction, spineUpdateAction, isAimingFunc, runState);
         currentState = runState();
     }
     void Update()
@@ -91,6 +96,14 @@ public class PlayerBehaviour : MonoBehaviour
             currentState.Start();
         }
         currentState.Update();
+    }
+    void LateUpdate()
+    {
+        if(currentState is ILateUpdatable)
+        {
+            ILateUpdatable state = (ILateUpdatable)currentState;
+            state.LateUpdate();
+        }
     }
 }
 public delegate IHumanState HumanState();
