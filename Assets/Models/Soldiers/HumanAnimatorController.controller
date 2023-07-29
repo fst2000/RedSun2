@@ -100,8 +100,8 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: runBlend
     m_Mirror: 0
-  m_BlendParameter: WalkAimX
-  m_BlendParameterY: WalkAimY
+  m_BlendParameter: walkAimX
+  m_BlendParameterY: walkAimY
   m_MinThreshold: 0
   m_MaxThreshold: 1
   m_UseAutomaticThresholds: 1
@@ -155,8 +155,8 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: runBlend
     m_Mirror: 0
-  m_BlendParameter: CrouchAimX
-  m_BlendParameterY: CrouchAimY
+  m_BlendParameter: crouchAimX
+  m_BlendParameterY: crouchAimY
   m_MinThreshold: 0
   m_MaxThreshold: 1
   m_UseAutomaticThresholds: 1
@@ -205,25 +205,25 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: WalkAimX
+  - m_Name: walkAimX
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: WalkAimY
+  - m_Name: walkAimY
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: CrouchAimX
+  - m_Name: crouchAimX
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: CrouchAimY
+  - m_Name: crouchAimY
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0

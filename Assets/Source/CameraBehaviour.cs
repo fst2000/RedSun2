@@ -9,8 +9,13 @@ public class CameraBehaviour : MonoBehaviour
     [SerializeField] float rotationSpeed;
     [SerializeField] Vector3 defaultOffset;
     [SerializeField] Vector3 aimOffset;
+    [SerializeField] float fovDef;
+    [SerializeField] float fovAim;
+    [SerializeField] float camSmooth;
     CameraRotationVector2 cameraRotationVector2;
-    CameraPosFunc cameraPosFunc;
+    Vector3OffsetFunc cameraPosFunc;
+    FloatFunc cameraFov;
+    BoolFunc aimInput;
     void Start()
     {
         cameraRotationVector2 = new CameraRotationVector2(v2Action =>
@@ -22,12 +27,23 @@ public class CameraBehaviour : MonoBehaviour
             Vector3 rotatedOffset = transform.rotation * new Vector3(offset.x,0,offset.z);
             action(origin.position + new Vector3(0, offset.y, 0) + rotatedOffset);
         };
+        cameraFov = fAction => aimInput(b => fAction(b? fovAim : fovDef));
+        aimInput = bAction => bAction(Input.GetMouseButton(1));
     }
     void Update()
     {
         cameraRotationVector2.Accept(v2 =>
             transform.rotation = Quaternion.Euler(new Vector3(-v2.y, v2.x, 0)));
-        cameraPosFunc(v3 => transform.position = v3, defaultOffset);
+        aimInput(b =>
+        {
+            cameraPosFunc(v3 => transform.position = v3,  b? aimOffset : defaultOffset);
+        });
+        cameraFov(f =>
+        {
+            float fov = Camera.main.fieldOfView;
+            fov = Mathf.Lerp(fov, f, Time.deltaTime * camSmooth);
+            Camera.main.fieldOfView = fov;
+        });
     }
-    delegate void CameraPosFunc(Action<Vector3> action, Vector3 offset);
+    delegate void Vector3OffsetFunc(Action<Vector3> action, Vector3 offset);
 }

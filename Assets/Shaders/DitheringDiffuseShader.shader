@@ -6,6 +6,9 @@ Shader "Unlit/DitheringDiffuseShader"
         _Width ("Width", int) = 480
         _Height ("Height", int) = 270
         _Gray ("Gray", Range(0,1)) = 0.0
+        _Contrast ("Contrast", Range(0,2)) = 1
+        _Brightness ("Brightness", Range(0,2)) = 1
+
     }
     SubShader
     {
@@ -40,6 +43,8 @@ Shader "Unlit/DitheringDiffuseShader"
             float _Width;
             float _Height;
             float _Gray;
+            float _Contrast;
+            float _Brightness;
 
             v2f vert (appdata v)
             {
@@ -96,9 +101,17 @@ Shader "Unlit/DitheringDiffuseShader"
                 col = lerp(col, colGray, _Gray);
                 return col;
             }
+            fixed4 contrastCol(fixed4 col)
+            {
+                col.x = clamp(0.5 + ((col.x - 0.5) * _Contrast), 0, 1);
+                col.y = clamp(0.5 + ((col.y - 0.5) * _Contrast), 0, 1);
+                col.z = clamp(0.5 + ((col.z - 0.5) * _Contrast), 0, 1);
+                return col;
+            }
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = sepiaCol(tex2D(_MainTex, i.uv));
+                col = contrastCol(col) * _Brightness;
                 fixed4 col2 = fixed4(floorFixed(col.x), floorFixed(col.y), floorFixed(col.z), col.w);
                 fixed4 colDithered = fixed4
                 (

@@ -5,105 +5,76 @@ using System;
 
 public class PlayerBehaviour : MonoBehaviour
 {
+    [SerializeField] new Transform camera;
     [SerializeField] Animator animator;
-    [SerializeField] Transform spine;
-    [SerializeField] float runSpeed;
-    [SerializeField] float walkSpeed;
-    [SerializeField] float crouchSpeed;
-    new Transform camera;
     new Rigidbody rigidbody;
-    IHumanState currentState;
+    Action<string> animStart;
+    Action<string, float> animBlend;
+    Action<string, string, float, float> animBlendXY;
+    Action<Vector3> velocity;
+    Action<Quaternion> rotation;
+    Func<Vector3, Quaternion> lookRot;
+    Vector3Func moveInput;
+    Vector3Func moveVector3;
+    RotationFunc tRotation;
+    RotationFunc camMoveRotFunc;
     HumanState runState;
-    HumanState walkAimState;
-    IAnimator humanAnimator;
-    KeyboardMoveInput moveInput;
-    RotationFunc moveRotationFunc;
-    RotationFunc moveAimRotationFunc;
-    RotationFunc aimRotationFunc;
-    Vector3Func moveVector3Func;
-    Vector2Func walkAimAnimatorFunc;
-    FloatFunc runAnimatorFunc;
-    BoolFunc isAimingFunc;
-    Action runStartAction;
-    Action runStateUpdateAction;
-    Action walkAimStartAction;
-    Action walkAimUpdateAction;
-    Action spineUpdateAction;
-    void Start()
-    {
-        camera = Camera.main.transform;
-
+    IHumanState currentState;
+   void Start()
+   {
         rigidbody = gameObject.AddComponent<Rigidbody>();
-        rigidbody.mass = 60;
-        rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
         rigidbody.freezeRotation = true;
-
-        humanAnimator = new UnityAnimator(animator);
-        moveInput = new KeyboardMoveInput();
-        moveRotationFunc = qAction => moveVector3Func(v3 =>
+        rigidbody.mass = 60;
+        animStart = name => animator.CrossFade(name, 0.25f);
+        animBlend = (name, f) => animator.SetFloat(name, f);
+        animBlendXY = (nameX, nameY, x, y) =>
         {
-            if(v3.magnitude > 0.01f) qAction(Quaternion.LookRotation(v3));
-        });
-        moveAimRotationFunc = qAction => 
-        {
-            Vector3 look = camera.transform.forward;
-            look.y = 0;
-            qAction(Quaternion.LookRotation(look));
+            animator.SetFloat(nameX,x);
+            animator.SetFloat(nameY, y);
         };
-        aimRotationFunc = qAction => qAction(Quaternion.FromToRotation(transform.forward,camera.forward));
-        moveVector3Func = v3Action =>
+        velocity = v3 => rigidbody.velocity = new Vector3(v3.x, rigidbody.velocity.y + v3.y, v3.z);
+        rotation = q => transform.rotation = q;
+        lookRot = v3 => Quaternion.LookRotation(v3);
+        moveInput = v3Action =>
+        v3Action(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")));
+        moveVector3 = v3Action =>
         {
-            moveInput.Accept(v2 =>
+            moveInput(v3 =>
             {
-                Vector3 inputV3 = camera.TransformDirection(new Vector3(v2.x, 0, v2.y));
-                inputV3 = Vector3.ClampMagnitude(new Vector3(inputV3.x,0,inputV3.z).normalized * inputV3.magnitude, 1);
-                v3Action(inputV3);
+                Vector3 tDir = camera.TransformDirection(v3);
+                tDir = Vector3.ClampMagnitude(new Vector3(tDir.x,0,tDir.z).normalized * tDir.magnitude, 1);
+                v3Action(tDir);
             });
         };
-        walkAimAnimatorFunc = v2Action =>
-            moveInput.Accept(v2 => v2Action(v2 * rigidbody.velocity.magnitude));
-        runAnimatorFunc = fAction => fAction(rigidbody.velocity.magnitude);
-        isAimingFunc = bAction => bAction(Input.GetMouseButton(1));
-        runStartAction = () => humanAnimator.StartAnimation("Run").Play();
-        runStateUpdateAction = () =>
+        tRotation = qAction => qAction(transform.rotation);
+        camMoveRotFunc = qAction =>
         {
-            moveRotationFunc(q => transform.rotation = q);
-            moveVector3Func(v3 => rigidbody.velocity = v3 * runSpeed);
-            runAnimatorFunc(f => animator.SetFloat("runBlend", f));
+            Vector3 cDir = camera.transform.forward;
+            qAction(Quaternion.LookRotation(new Vector3(cDir.x,0,cDir.z)));
         };
-        walkAimStartAction = () => humanAnimator.StartAnimation("WalkAim").Play();
-        walkAimUpdateAction = () =>
-        {
-            moveAimRotationFunc(q => transform.rotation = q);
-            moveVector3Func(v3 => rigidbody.velocity = v3 * walkSpeed);
-            walkAimAnimatorFunc(v2 => 
-            {
-                animator.SetFloat("WalkAimX", v2.x);
-                animator.SetFloat("WalkAimY", v2.y);
-            });
-        };
-        spineUpdateAction = () => aimRotationFunc(q => spine.rotation = q * spine.rotation);
 
-        runState = () => new HumanRunState(runStartAction, runStateUpdateAction, isAimingFunc, walkAimState);
-        walkAimState = () => new HumanWalkAimState(walkAimStartAction, walkAimUpdateAction, spineUpdateAction, isAimingFunc, runState);
+        runState = () => new HumanRunState(moveVector3, animStart, animBlend, rotation, velocity);
         currentState = runState();
-    }
-    void Update()
-    {
-        if(currentState.NextState() != currentState)
+        currentState.Start();
+   }
+   void Update()
+   {
+        if(currentState != currentState.NextState())
         {
+            currentState.Exit();
             currentState = currentState.NextState();
             currentState.Start();
         }
         currentState.Update();
-    }
-    void LateUpdate()
-    {
-        if(currentState is ILateUpdatable)
-        {
-            ILateUpdatable state = (ILateUpdatable)currentState;
-            state.LateUpdate();
-        }
-    }
+   }
+   void FixedUpdate()
+   {
+
+   }
+   void LateUpdate()
+   {
+
+   }
+    
 }
 public delegate IHumanState HumanState();
