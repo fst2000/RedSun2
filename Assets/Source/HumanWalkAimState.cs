@@ -1,14 +1,14 @@
 using System;
-public class HumanRunState : IHumanState
+public class HumanWalkAimState : IHumanState
 {
     IAnimator animator;
-    FloatFunc runBlend;
+    Vector2Func runBlend;
     IHumanSize humanSize;
     IHumanStatus humanStatus;
     HumanState crouchState;
 
-    float runSpeed = 5f;
-    public HumanRunState(IAnimator animator, FloatFunc runBlend, IHumanSize humanSize, IHumanStatus humanStatus, HumanState crouchState)
+    float runSpeed = 3f;
+    public HumanWalkAimState(IAnimator animator, Vector2Func runBlend, IHumanSize humanSize, IHumanStatus humanStatus, HumanState crouchState)
     {
         this.animator = animator;
         this.runBlend = runBlend;
@@ -18,12 +18,16 @@ public class HumanRunState : IHumanState
     }
     public void Enter()
     {
-        humanStatus.isArmed()(b => animator.StartAnimation(b?"RunArmed" : "Run").Play());
+        animator.StartAnimation("WalkAim").Play();
         humanSize.Accept(1.8f);
     }
     public void Update()
     {
-        runBlend(f => animator.ParameterFloat("run").Load(f));
+        runBlend(v2 =>
+        {
+            animator.ParameterFloat("walkAimX").Load(v2.x);
+            animator.ParameterFloat("walkAimY").Load(v2.y);
+        });
     }
     public void Exit()
     {

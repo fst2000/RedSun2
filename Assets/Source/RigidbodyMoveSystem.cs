@@ -16,7 +16,7 @@ public class RigidbodyMoveSystem : IMoveSystem
     {
         velocityV3.Accept(v3 =>
         {
-            rigidbody.velocity = new Vector3(v3.x,v3.y + rigidbody.velocity.y, v3.z);
+            if(v3!= Vector3.zero) rigidbody.velocity = new Vector3(v3.x,v3.y + rigidbody.velocity.y, v3.z);
         });
     }
 }
