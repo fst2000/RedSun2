@@ -741,7 +741,8 @@ PrefabInstance:
       propertyPath: shoulderR
       value: 
       objectReference: {fileID: 5856551879865763401}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 938541273354812747, guid: c508fac293103854d8e67609749b018c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c508fac293103854d8e67609749b018c, type: 3}
 --- !u!4 &1971667325490599582 stripped
 Transform:

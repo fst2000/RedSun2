@@ -1,6 +1,6 @@
 public interface IHumanState
 {
-    void Start();
+    void Enter();
     void Update();
     void Exit();
     IHumanState NextState();

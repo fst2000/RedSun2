@@ -10,7 +10,7 @@ public class UnityAnimator : IAnimator
 
     public IParameter ParameterFloat(string name)
     {
-        return null;
+        return new AnimatorParameter(animator, name);
     }
 
     public IAnimation StartAnimation(string name)
