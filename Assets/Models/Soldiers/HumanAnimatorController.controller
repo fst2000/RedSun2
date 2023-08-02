@@ -26,6 +26,32 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1102 &-8457044293590280990
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: RunArmed
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 3804228899428891815}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1102 &-6479000032567326662
 AnimatorState:
   serializedVersion: 6
@@ -52,6 +78,37 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!206 &-6123703955460812626
+BlendTree:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Crouch
+  m_Childs:
+  - serializedVersion: 2
+    m_Motion: {fileID: -4275045002938189302, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
+    m_Threshold: 0
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: blend
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: 6589755540219670814, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
+    m_Threshold: 1
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: blend
+    m_Mirror: 0
+  m_BlendParameter: blend
+  m_BlendParameterY: blend
+  m_MinThreshold: 0
+  m_MaxThreshold: 1
+  m_UseAutomaticThresholds: 0
+  m_NormalizedBlendValues: 0
+  m_BlendType: 0
 --- !u!206 &-2146397789090289629
 BlendTree:
   m_ObjectHideFlags: 1
@@ -61,7 +118,7 @@ BlendTree:
   m_Name: WalkAim
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: 4593359022520828084, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+    m_Motion: {fileID: 704620218153043175, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 1}
     m_TimeScale: 1
@@ -69,7 +126,7 @@ BlendTree:
     m_DirectBlendParameter: runBlend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 4593359022520828084, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+    m_Motion: {fileID: 704620218153043175, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
     m_Threshold: 0.25
     m_Position: {x: 0, y: -1}
     m_TimeScale: -1
@@ -77,7 +134,7 @@ BlendTree:
     m_DirectBlendParameter: runBlend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 6941479125909277750, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+    m_Motion: {fileID: 3347214293999364269, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
     m_Threshold: 0.5
     m_Position: {x: 1, y: 0}
     m_TimeScale: 1
@@ -85,7 +142,7 @@ BlendTree:
     m_DirectBlendParameter: runBlend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 6941479125909277750, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+    m_Motion: {fileID: 3347214293999364269, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
     m_Threshold: 0.75
     m_Position: {x: -1, y: 0}
     m_TimeScale: -1
@@ -93,15 +150,15 @@ BlendTree:
     m_DirectBlendParameter: runBlend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -6096205072774090611, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+    m_Motion: {fileID: -8612821116061080561, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: runBlend
     m_Mirror: 0
-  m_BlendParameter: walkAimX
-  m_BlendParameterY: walkAimY
+  m_BlendParameter: blendX
+  m_BlendParameterY: blendY
   m_MinThreshold: 0
   m_MaxThreshold: 1
   m_UseAutomaticThresholds: 1
@@ -116,7 +173,7 @@ BlendTree:
   m_Name: CrouchAim
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -5797009859578261831, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+    m_Motion: {fileID: -2113660316065967707, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -124,7 +181,7 @@ BlendTree:
     m_DirectBlendParameter: runBlend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -4600468192971213602, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+    m_Motion: {fileID: 8635256941464438753, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
     m_Threshold: 0.25
     m_Position: {x: 0, y: 1}
     m_TimeScale: 1
@@ -132,7 +189,7 @@ BlendTree:
     m_DirectBlendParameter: runBlend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -4600468192971213602, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+    m_Motion: {fileID: 8635256941464438753, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
     m_Threshold: 0.5
     m_Position: {x: 0, y: -1}
     m_TimeScale: -1
@@ -140,7 +197,7 @@ BlendTree:
     m_DirectBlendParameter: runBlend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -5788129696306325804, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+    m_Motion: {fileID: 4883248334641250274, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
     m_Threshold: 0.75
     m_Position: {x: 1, y: 0}
     m_TimeScale: 1
@@ -148,15 +205,15 @@ BlendTree:
     m_DirectBlendParameter: runBlend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -5788129696306325804, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+    m_Motion: {fileID: 4883248334641250274, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
     m_Threshold: 1
     m_Position: {x: -1, y: 0}
     m_TimeScale: -1
     m_CycleOffset: 0
     m_DirectBlendParameter: runBlend
     m_Mirror: 0
-  m_BlendParameter: crouchAimX
-  m_BlendParameterY: crouchAimY
+  m_BlendParameter: blendX
+  m_BlendParameterY: blendY
   m_MinThreshold: 0
   m_MaxThreshold: 1
   m_UseAutomaticThresholds: 1
@@ -176,10 +233,19 @@ AnimatorStateMachine:
     m_Position: {x: 390, y: 90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6479000032567326662}
-    m_Position: {x: 390, y: 20, z: 0}
+    m_Position: {x: 810, y: 90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8516601962559022069}
-    m_Position: {x: 390, y: -60, z: 0}
+    m_Position: {x: 810, y: 150, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 5713032509193585359}
+    m_Position: {x: 390, y: 150, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -8457044293590280990}
+    m_Position: {x: 600, y: 90, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 6991702274686322035}
+    m_Position: {x: 600, y: 150, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -187,7 +253,7 @@ AnimatorStateMachine:
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
   m_EntryPosition: {x: 50, y: 120, z: 0}
-  m_ExitPosition: {x: 800, y: 120, z: 0}
+  m_ExitPosition: {x: 1070, y: -30, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 6492487243836256641}
 --- !u!91 &9100000
@@ -199,36 +265,24 @@ AnimatorController:
   m_Name: HumanAnimatorController
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: runBlend
+  - m_Name: blend
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: walkAimX
+    m_Controller: {fileID: 9100000}
+  - m_Name: blendX
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: walkAimY
+    m_Controller: {fileID: 9100000}
+  - m_Name: blendY
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: crouchAimX
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
-  - m_Name: crouchAimY
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -242,16 +296,78 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
+--- !u!206 &508268794574099118
+BlendTree:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CrouchArmed
+  m_Childs:
+  - serializedVersion: 2
+    m_Motion: {fileID: -5797009859578261831, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
+    m_Threshold: 0
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: blend
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: -4600468192971213602, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
+    m_Threshold: 1
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: blend
+    m_Mirror: 0
+  m_BlendParameter: blend
+  m_BlendParameterY: blend
+  m_MinThreshold: 0
+  m_MaxThreshold: 1
+  m_UseAutomaticThresholds: 1
+  m_NormalizedBlendValues: 0
+  m_BlendType: 0
+--- !u!206 &3804228899428891815
+BlendTree:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: RunArmed
+  m_Childs:
+  - serializedVersion: 2
+    m_Motion: {fileID: -6096205072774090611, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
+    m_Threshold: 0
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 0.5
+    m_CycleOffset: 0
+    m_DirectBlendParameter: blend
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: -6754449979203148887, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
+    m_Threshold: 1
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1.5
+    m_CycleOffset: 0
+    m_DirectBlendParameter: blend
+    m_Mirror: 0
+  m_BlendParameter: blend
+  m_BlendParameterY: blend
+  m_MinThreshold: 0
+  m_MaxThreshold: 1
+  m_UseAutomaticThresholds: 1
+  m_NormalizedBlendValues: 0
+  m_BlendType: 0
 --- !u!206 &5676627405264372993
 BlendTree:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Blend Tree
+  m_Name: Run
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -8945691123924629249, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+    m_Motion: {fileID: -8945691123924629249, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
@@ -259,20 +375,46 @@ BlendTree:
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -7551964380084998518, guid: 71c7f850d31a7e04d8d15235c740dc19, type: 3}
+    m_Motion: {fileID: -7551964380084998518, guid: 841080ffcb11f344ca852c477c5653e7, type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1.5
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
-  m_BlendParameter: runBlend
+  m_BlendParameter: blend
   m_BlendParameterY: Blend
   m_MinThreshold: 0
   m_MaxThreshold: 1
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
   m_BlendType: 0
+--- !u!1102 &5713032509193585359
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Crouch
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: -6123703955460812626}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1102 &6492487243836256641
 AnimatorState:
   serializedVersion: 6
@@ -294,6 +436,32 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
   m_Motion: {fileID: 5676627405264372993}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &6991702274686322035
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: CrouchArmed
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 508268794574099118}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

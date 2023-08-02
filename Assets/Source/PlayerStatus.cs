@@ -1,17 +1,17 @@
 using UnityEngine;
 public class PlayerStatus : IHumanStatus
 {
-    public BoolFunc isAiming()
+    public BoolFunc IsAiming()
     {
         return bAction => bAction(Input.GetMouseButton(1));
     }
 
-    public BoolFunc isArmed()
+    public BoolFunc IsArmed()
     {
-        return bAction => bAction(Input.GetMouseButtonDown(0));
+        return bAction => bAction(Input.GetMouseButton(0));
     }
 
-    public BoolFunc isCrouching()
+    public BoolFunc IsCrouching()
     {
         return bAction => bAction(Input.GetKey(KeyCode.LeftControl));
     }
