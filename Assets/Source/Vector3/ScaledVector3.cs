@@ -4,8 +4,8 @@ using UnityEngine;
 public class ScaledVector3 : IVector3
 {
     IVector3 vector3;
-    float scale;
-    public ScaledVector3(IVector3 vector3, float scale)
+    FloatFunc scale;
+    public ScaledVector3(IVector3 vector3, FloatFunc scale)
     {
         this.vector3 = vector3;
         this.scale = scale;
@@ -14,7 +14,7 @@ public class ScaledVector3 : IVector3
     {
         vector3.Accept(v3 =>
         {
-            action(v3 * scale);
+            scale(f => action(v3 * f));
         });
     }
 }
