@@ -12,6 +12,6 @@ public class FlatVector3 : IVector3
 
     public void Accept(Action<Vector3> action)
     {
-        vector3.Accept(v3 => action(new Vector3(v3.x, 0, v3.z)));
+        vector3.Accept(v3 => action(new Vector3(v3.x, 0, v3.z).normalized * v3.magnitude));
     }
 }

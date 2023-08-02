@@ -3,18 +3,14 @@ public class AnimRunState : IHumanState
     IAnimator animator;
     FloatFunc blend;
     IHumanStatus status;
-    HumanState animCrouchState;
-    HumanState animWalkAimState;
-    HumanState animRunArmedState;
+    HumanStates states;
 
-    public AnimRunState(IAnimator animator, FloatFunc blend, IHumanStatus status, HumanState animCrouchState, HumanState animWalkAimState, HumanState animRunArmedState)
+    public AnimRunState(IAnimator animator, FloatFunc blend, IHumanStatus status, HumanStates states)
     {
         this.animator = animator;
         this.blend = blend;
         this.status = status;
-        this.animCrouchState = animCrouchState;
-        this.animWalkAimState = animWalkAimState;
-        this.animRunArmedState = animRunArmedState;
+        this.states = states;
     }
 
     public void Enter()
@@ -29,8 +25,8 @@ public class AnimRunState : IHumanState
     public IHumanState NextState()
     {
         IHumanState next = this;;
-        status.IsCrouching()(b => next = b? animCrouchState() : next);
-        status.IsArmed()(b => next = b? animRunArmedState() : next);
+        status.IsCrouching()(b => next = b? states.animCrouch() : next);
+        status.IsArmed()(b => next = b? states.animRunArmed() : next);
         return next;
     }
 }

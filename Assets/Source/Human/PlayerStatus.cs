@@ -13,6 +13,6 @@ public class PlayerStatus : IHumanStatus
 
     public BoolFunc IsCrouching()
     {
-        return bAction => bAction(Input.GetKey(KeyCode.LeftControl));
+        return bAction => bAction(Input.GetKey(KeyCode.LeftShift));
     }
 }

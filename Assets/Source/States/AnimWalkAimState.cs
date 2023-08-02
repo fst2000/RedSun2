@@ -3,16 +3,16 @@ public class AnimWalkAimState : IHumanState
     IAnimator animator;
     Vector2Func blendXY;
     IHumanStatus status;
-    HumanState animCrouchAimState;
-    HumanState animRunState;
-    public AnimWalkAimState(IAnimator animator, Vector2Func blendXY, IHumanStatus status, HumanState animCrouchAimState, HumanState animRunState)
+    HumanStates states;
+
+    public AnimWalkAimState(IAnimator animator, Vector2Func blendXY, IHumanStatus status, HumanStates states)
     {
         this.animator = animator;
         this.blendXY = blendXY;
         this.status = status;
-        this.animCrouchAimState = animCrouchAimState;
-        this.animRunState = animRunState;
+        this.states = states;
     }
+
     public void Enter()
     {
         animator.StartAnimation("WalkAim").Play();
@@ -31,9 +31,9 @@ public class AnimWalkAimState : IHumanState
         IHumanState next = this;;
         status.IsArmed()(armed =>
         {
-            status.IsAiming()(aiming => next = aiming && armed ? next : animRunState());
+            status.IsAiming()(aiming => next = aiming && armed ? next : states.animRun());
         });
-        status.IsCrouching()(b => next = b? animCrouchAimState() : next);
+        status.IsCrouching()(b => next = b? states.animCrouchAim() : next);
         return next;
     }
 }

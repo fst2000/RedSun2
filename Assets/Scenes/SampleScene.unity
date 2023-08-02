@@ -15,7 +15,7 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 1
-  m_FogColor: {r: 0.6627451, g: 0.8705883, b: 0.9176471, a: 1}
+  m_FogColor: {r: 0.33333334, g: 0.5647059, b: 0.7019608, a: 1}
   m_FogMode: 1
   m_FogDensity: 0.01
   m_LinearFogStart: 0
@@ -656,10 +656,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   origin: {fileID: 1222912461}
   rotationSpeed: 5
-  defaultOffset: {x: 0, y: 1.5, z: -3}
-  aimOffset: {x: 0.7, y: 1.5, z: -2}
+  defaultOffset: {x: 0.7, y: 1.5, z: -3}
+  aimOffset: {x: 0.7, y: 1.5, z: -3}
   fovDef: 60
-  fovAim: 35
+  fovAim: 30
   camSmooth: 5
 --- !u!1001 &1218866943
 PrefabInstance:
@@ -756,4 +756,6 @@ MonoBehaviour:
   camera: {fileID: 963194228}
   animator: {fileID: 1222912460}
   runSpeed: 5
-  crouchSpeed: 3
+  crouchSpeed: 2.5
+  walkAimSpeed: 2
+  crouchAimSpeed: 2
