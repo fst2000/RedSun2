@@ -5,3 +5,4 @@ public interface IHumanState
     void Exit();
     IHumanState NextState();
 }
+public delegate IHumanState HumanState();
