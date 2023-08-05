@@ -1,4 +1,5 @@
 public interface IWeapon
 {
-    IBullet Shoot();
+    void Shoot();
+    void Reload();
 }

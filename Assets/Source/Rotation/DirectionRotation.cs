@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
 
-public class DirectionRotation : IRotation
+public class LookRotation : IRotation
 {
     IVector3 direction;
-    public DirectionRotation(IVector3 direction)
+    public LookRotation(IVector3 direction)
     {
         this.direction = direction;
     }

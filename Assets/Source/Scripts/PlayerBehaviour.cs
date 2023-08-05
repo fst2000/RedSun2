@@ -6,6 +6,7 @@ public class PlayerBehaviour : MonoBehaviour
 {
   [SerializeField] new Transform camera;
   [SerializeField] Animator animator;
+  [SerializeField] Transform spine2;
   [SerializeField] float runSpeed;
   [SerializeField] float crouchSpeed;
   [SerializeField] float walkAimSpeed;
@@ -15,10 +16,13 @@ public class PlayerBehaviour : MonoBehaviour
 
   IEvent fixedUpdate;
   IEvent update;
+  IEvent lateUpdate;
   IHumanStatus status;
   IHumanSize humanSize;
   IAnimator humanAnimator;
   IMoveSystem playerMoveSystem;
+  IRotation spineAimRotation;
+  RotationFunc spineRotationFunc;
   IVector3 inputMoveV3;
   IVector3 moveVector3;
   FloatFunc humanSizeFunc;
@@ -29,6 +33,8 @@ public class PlayerBehaviour : MonoBehaviour
   StateMachine animStateMachine;
   StateMachine moveStateMachine;
   StateMachine rotStateMachine;
+
+  IWeapon weapon;
   void Start()
   {
       rigidbody = gameObject.AddComponent<Rigidbody>();
@@ -41,6 +47,7 @@ public class PlayerBehaviour : MonoBehaviour
 
       fixedUpdate = new Event();
       update = new Event();
+      lateUpdate = new Event();
       status = new PlayerStatus();
       humanSize = new ColliderHumanSize(capsuleCollider);
       humanAnimator = new UnityAnimator(animator);
@@ -61,6 +68,17 @@ public class PlayerBehaviour : MonoBehaviour
           });
         });
       };
+      spineAimRotation = new BoneRotation(new FromToRotation(new TransformForwardVector3(transform), new TransformForwardVector3(camera)), lateUpdate);
+      spineRotationFunc = qAction =>
+      {
+        status.IsArmed()(armed =>
+        {
+          status.IsAiming()(aiming =>
+          {
+            if(armed & aiming) spineAimRotation.Accept(q => qAction(q));
+          });
+        });
+      };
       moveVector3 = new ScaledVector3(new FlatVector3(new TransformDirectionVector3(inputMoveV3, camera)), moveSpeed);
       humanSizeFunc = fAction =>
       {
@@ -74,7 +92,9 @@ public class PlayerBehaviour : MonoBehaviour
       rotStateMachine = new StateMachine(playerStates.rotMove());
       moveStateMachine = new StateMachine(playerStates.moveInput());
 
-      new AutomatBullet(new BulletPositionVector3(Vector3.zero, transform.forward, 1), update);
+      IVector3 weaponPosition = new PositionVector3(spine2);
+      IRotation weaponRotation = new LookRotation(new TransformForwardVector3(transform));
+      weapon = new PPSH(weaponPosition, weaponRotation, update);
   }
   void Update()
   {
@@ -83,6 +103,8 @@ public class PlayerBehaviour : MonoBehaviour
       rotStateMachine.Update();
       moveStateMachine.Update();
       humanSizeFunc(f => humanSize.Accept(f));
+      spineRotationFunc(q => spine2.transform.rotation = q * spine2.transform.rotation);
+      if(Input.GetMouseButtonDown(0)) weapon.Shoot();
   }
   void FixedUpdate()
   {
@@ -90,6 +112,6 @@ public class PlayerBehaviour : MonoBehaviour
   }
   void LateUpdate()
   {
-
+    lateUpdate.Call();
   }
 }

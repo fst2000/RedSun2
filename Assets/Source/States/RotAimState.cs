@@ -11,7 +11,7 @@ public class RotAimState : IHumanState
         this.human = human;
         this.status = status;
         this.rotMoveState = rotMoveState;
-        aimRotation = new DirectionRotation(new FlatVector3(new TransformForwardVector3(target)));
+        aimRotation = new LookRotation(new FlatVector3(new TransformForwardVector3(target)));
     }
 
     public void Enter(){}

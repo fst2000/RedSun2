@@ -13,7 +13,7 @@ public class RotMoveState : IHumanState
         this.human = human;
         this.status = status;
         this.rotAimState = rotAimState;
-        moveRotation = new DirectionRotation(moveVector);
+        moveRotation = new LookRotation(moveVector);
     }
 
     public void Enter(){}
