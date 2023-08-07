@@ -7,6 +7,7 @@ public class PlayerBehaviour : MonoBehaviour
   [SerializeField] new Transform camera;
   [SerializeField] Animator animator;
   [SerializeField] Transform spine2;
+  [SerializeField] Transform handRReal;
   [SerializeField] float runSpeed;
   [SerializeField] float crouchSpeed;
   [SerializeField] float walkAimSpeed;
@@ -92,8 +93,14 @@ public class PlayerBehaviour : MonoBehaviour
       rotStateMachine = new StateMachine(playerStates.rotMove());
       moveStateMachine = new StateMachine(playerStates.moveInput());
 
-      IVector3 weaponPosition = new PositionVector3(spine2);
-      IRotation weaponRotation = new LookRotation(new TransformForwardVector3(transform));
+      IVector3 weaponOffset = new WeaponOffsetVector3(new Vector3(0.15f, 0.22f, 0.2f), new Vector3(0.15f, 0.05f, 0.3f), status);
+      IRotation weaponAimRotation = new LookRotation(new TransformForwardVector3(camera));
+      IRotation weaponArmedRotation = new TransformRotation(handRReal);
+      IVector3 weaponAimPosition = new WeaponAimPositionVector3(spine2, weaponAimRotation, weaponOffset);
+      IVector3 weaponArmedPosition = new PositionVector3(handRReal);
+
+      IVector3 weaponPosition = new ConditionVector3(new FuncBool(status.IsAiming()), weaponAimPosition, weaponArmedPosition);
+      IRotation weaponRotation = new ConditionRotation(new FuncBool(status.IsAiming()), weaponAimRotation, weaponArmedRotation);
       weapon = new PPSH(weaponPosition, weaponRotation, update);
   }
   void Update()

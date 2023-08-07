@@ -1,11 +1,11 @@
 using System;
 using UnityEngine;
-public class WeaponPositionVector3 : IVector3
+public class WeaponAimPositionVector3 : IVector3
 {
     Transform spine2;
     IRotation aimRotation;
     IVector3 offset;
-    public WeaponPositionVector3(Transform spine2, IRotation aimRotation, IVector3 offset)
+    public WeaponAimPositionVector3(Transform spine2, IRotation aimRotation, IVector3 offset)
     {
         this.spine2 = spine2;
         this.aimRotation = aimRotation;

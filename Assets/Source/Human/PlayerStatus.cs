@@ -10,9 +10,6 @@ public class PlayerStatus : IHumanStatus
     public BoolFunc IsArmed()
     {
         return  bAction => bAction(true);
-        BoolFunc isArmedFunc = null;
-        isArmed.Accept(b => isArmedFunc = bAction => bAction(b));
-        return isArmedFunc;
     }
 
     public BoolFunc IsCrouching()

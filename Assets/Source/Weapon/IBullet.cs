@@ -1,4 +1,4 @@
 public interface IBullet
 {
-    IMark Impact();
+    void Impact();
 }
