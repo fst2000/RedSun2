@@ -8,7 +8,7 @@ public class PPSH : IWeapon
     Transform ppshTransform;
     Transform transform;
     Vector3 shootPoint = new Vector3(0, 0.04f, 0.6f);
-    float bulletSpeed = 500f;
+    float bulletSpeed = 100f;
     public PPSH(IVector3 position, IRotation rotation, IEvent update)
     {
         this.position = position;

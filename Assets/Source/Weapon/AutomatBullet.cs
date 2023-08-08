@@ -5,7 +5,8 @@ public class AutomatBullet : IBullet
     Transform transform;
     GameObject bulletGameObject;
     BulletHit bulletHit;
-    Vector3 startPoint;
+    HitParticle hitParticle;
+    HitNormalVector3 hitNormalVector3;
     public AutomatBullet(BulletPositionVector3 bulletPosition, IEvent update)
     {
         this.bulletPosition = bulletPosition;
@@ -13,16 +14,23 @@ public class AutomatBullet : IBullet
         bulletPosition.Accept(pos =>
         {
             bulletGameObject = GameObject.Instantiate(Resources.Load<GameObject>("Weapon/AutomatBullet"), pos, Quaternion.identity);
-            startPoint = pos;
         });
         transform = bulletGameObject.transform;
         update.Subscribe(Update);
+        hitNormalVector3 = new HitNormalVector3(bulletHit);
+        hitParticle = new HitParticle(bulletPosition, hitNormalVector3);
+        
     }
     void Update()
     {
         bulletPosition.Accept(v3 =>
         {
-            transform.position = v3;
+            if(bulletGameObject != null) transform.position = v3;
+        });
+        bulletHit.Accept(hit =>
+        {
+            hitParticle.Show();
+            GameObject.Destroy(bulletGameObject);
         });
     }
 }
